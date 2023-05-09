@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useState, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 
@@ -11,29 +11,40 @@ import "./index.css";
 import Header from "home/Header";
 import Footer from "home/Footer";
 import SafeComponent from "./SafeComponent";
-import PDPContent from "./PdpContent";
+import PdpContent from "./PdpContent";
+import { ListComponentmount } from "vueapp/ListComponent";
+import { CounterProvider } from "home/context";
+import MyComponent from "./MyComponent";
 
 const App = () => {
   // const [showHeader, setShowHeader] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    ListComponentmount(ref.current);
+  }, []);
   return (
-    <Router>
-
-    <div className="container">
-      {/* {showHeader && <Suspense fallback={<div>Loading...</div>}>
+    <>
+    <CounterProvider>
+      <div className="container">
+        {/* {showHeader && <Suspense fallback={<div>Loading...</div>}>
         <Header />
       </Suspense>} */}
-      <SafeComponent>
-        <Header />
-      </SafeComponent>
-      <div>
-      <Routes>
-      <Route path="/users/:id" element={<PDPContent />} />
-        </Routes>
+        <SafeComponent>
+          <Header />
+        </SafeComponent>
+        <div ref={ref} />
+        <MyComponent />
+        <Router>
+          <div>
+            <Routes>
+              <Route path="/users/:id" element={<PdpContent />} />
+            </Routes>
+          </div>
+        </Router>
+        <Footer />
       </div>
-      <Footer />
-    </div>
-    </Router>
-
+    </CounterProvider>
+    </>
   );
 };
 ReactDOM.render(<App />, document.getElementById("app"));
